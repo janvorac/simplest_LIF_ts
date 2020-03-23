@@ -1,0 +1,11 @@
+{
+  "name": "simplest_lif_ts",
+  "version": "1.0.0",
+  "description": "A simple physics model of laser-induced fluorescence process",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jan Vorac",
+  "license": "MIT"
+}
