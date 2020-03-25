@@ -36,7 +36,6 @@ export default class Model {
    * @return           intensity value scaled between 0 and 1
    */
   public laserProfile(timeValue: number): number {
-    console.log(Model.c)
     return Math.pow(Model.c / Model.b * timeValue, Model.b) * Math.exp(Model.b - timeValue * Model.c)
   }
 
