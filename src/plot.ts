@@ -7,17 +7,19 @@ import {
   axisLeft,
   line,
   Axis
-} from './d3.min.js'
+} from 'd3'
 
 export default class plotMaker{
-  protected container: Selection<SVGGElement, null, null, null>;
-  protected plotGroup: Selection<SVGGElement, null, SVGElement, null>;
+  //protected container: Selection<SVGGElement, null, null, null>;
+  //protected plotGroup: Selection<SVGGElement, null, SVGElement, null>;
+  protected container: any;
+  protected plotGroup: any;
   protected yAxis: Axis<number>;
   protected xAxis: Axis<number>;
   protected margin: object;
   protected width: number;
   protected height: number;
-  this.data: Array<object>;
+  public data: Array<object>;
 
   public constructor(data: Array<object>){
     this.margin = {
@@ -28,22 +30,22 @@ export default class plotMaker{
     };
     this.data = data;
     this.container = select("#plot-container")
-    this.width = 500 - this.margin.left - this.margin.right;
-    this.height = 200 - this.margin.top - this.margin.bottom;
+    this.width = 500 - this.margin["left"]- this.margin["right"];
+    this.height = 200 - this.margin["top"] - this.margin["bottom"];
 
     this.plotGroup = this.container.append("g")
-      .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
+      .attr("transform", `translate(${this.margin["left"]}, ${this.margin["top"]})`)
 
-    const timeValue = (d: number): number => d.time;
-    const laserValue = (d: number): number => d.laserProf;
-    const fluorescenceValue = (d: number): number => d.fluorescence;
+    const timeValue = (d: object): number => d["time"];
+    const laserValue = (d: object): number => d["laserProf"];
+    const fluorescenceValue = (d: object): number => d["fluorescence"];
 
     const xScale = scaleLinear()
       .domain([min(data, timeValue), max(data, timeValue)])
       .range([0, this.width]);
 
     const yScale = scaleLinear()
-      .domain([min(data, laserValue), max(data, intensityValue)])
+      .domain([min(data, laserValue), max(data, laserValue)])
       .range([this.height, 0]);
 
     const xAxis = this.plotGroup.append("g")
@@ -69,7 +71,7 @@ export default class plotMaker{
     this.plotGroup.append("path")
       .classed("chartLine", true)
       .classed("fluo", true)
-      .datum(fluoData)
+      .datum(data)
       .attr("fill", "none")
       .attr("stroke", "steelblue")
       .attr("d", line()

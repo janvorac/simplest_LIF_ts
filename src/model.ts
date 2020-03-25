@@ -12,6 +12,7 @@ export default class Model {
     this.b = 12.6;
     this.c = 2.44;
     this.time = Model.linSpace(timeStart, timeEnd, 200)
+
     this.laserProfVector = Model.calculateVector(this.time, this.laserProfile)
 
     //TO BE REPLACED!!
@@ -35,7 +36,8 @@ export default class Model {
    * @return           intensity value scaled between 0 and 1
    */
   public laserProfile(timeValue: number): number {
-    return Math.pow(this.c / this.b * timeValue, this.b) * Math.exp(this.b - timeValue * this.c)
+    console.log(Model.c)
+    return Math.pow(Model.c / Model.b * timeValue, Model.b) * Math.exp(Model.b - timeValue * Model.c)
   }
 
   static calculateVector(x: number[], func: Function): number[] {
