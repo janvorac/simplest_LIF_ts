@@ -1,4 +1,6 @@
 .cache/*
 dist/*
-src/.cache.*
-node _modules/
+src/.cache
+node_modules/
+src/dist
+src/server.js
