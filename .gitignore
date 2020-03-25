@@ -1,4 +1,4 @@
 .cache/*
 dist/*
 src/.cache.*
-node _modules
+node _modules/
