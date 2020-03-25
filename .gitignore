@@ -1,4 +1,4 @@
 .cache/*
-./dist/*
-./src/.cache.*
-./node _modules/*
+dist/*
+src/.cache.*
+node _modules/*
