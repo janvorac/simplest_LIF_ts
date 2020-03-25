@@ -18,7 +18,7 @@ export default class plotMaker{
   protected width: number;
   protected height: number;
 
-  public constructor(laserProfData: Array<object>, fluoData: Array<object>){
+  public constructor(data: Array<object>){
     this.margin = {
       top: 10,
       right: 30,
@@ -32,16 +32,16 @@ export default class plotMaker{
     this.plotGroup = this.container.append("g")
       .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
 
-    const timeValue = d => d.time;
-    const intensityValue = d => d.intensity;
-    const fluorescenceValue = d => d.fluorescence;
+    const timeValue = (d: number): number => d.time;
+    const laserValue = (d: number): number => d.laserProf;
+    const fluorescenceValue = (d: number): number => d.fluorescence;
 
     const xScale = scaleLinear()
-      .domain([min(laserProfData, timeValue), max(laserProfData, timeValue)])
+      .domain([min(data, timeValue), max(data, timeValue)])
       .range([0, this.width]);
 
     const yScale = scaleLinear()
-      .domain([min(laserProfData, intensityValue), max(laserProfData, intensityValue)])
+      .domain([min(data, laserValue), max(data, intensityValue)])
       .range([this.height, 0]);
 
     const xAxis = this.plotGroup.append("g")
@@ -55,12 +55,12 @@ export default class plotMaker{
     this.plotGroup.append("path")
       .classed("chartLine", true)
       .classed("laserProf", true)
-      .datum(laserProfData)
+      .datum(data)
       .attr("fill", "none")
       .attr("stroke", "steelblue")
       .attr("d", line()
         .x(d => xScale(timeValue(d)))
-        .y(d => yScale(intensityValue(d)))
+        .y(d => yScale(laserValue(d)))
       )
 
     // Fluorescence line
@@ -72,7 +72,7 @@ export default class plotMaker{
       .attr("stroke", "steelblue")
       .attr("d", line()
         .x(d => xScale(timeValue(d)))
-        .y(d => yScale(intensityValue(d)))
+        .y(d => yScale(fluorescenceValue(d)))
       )
 
   }

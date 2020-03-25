@@ -4,11 +4,29 @@ export default class Model {
   protected b: number;
   protected c: number;
   public time: number[];
+  protected laserProfVector: number[];
+  protected fluoVector: number[];
+  public data: Array<object>;
 
   public constructor(timeStart: number, timeEnd: number) {
     this.b = 12.6;
     this.c = 2.44;
     this.time = Model.linSpace(timeStart, timeEnd, 200)
+    this.laserProfVector = Model.calculateVector(this.time, this.laserProfile)
+
+    //TO BE REPLACED!!
+    this.fluoVector = Model.calculateVector(this.time, this.expDecay)
+    //###########
+
+    this.data = Model.vectorsToDataObject([
+      this.time,
+      this.laserProfVector,
+      this.fluoVector
+    ], [
+      "time",
+      "laserProf",
+      "fluorescence"
+    ])
   }
 
   /**
@@ -30,7 +48,6 @@ export default class Model {
       }
       vector.push(nextVal);
     }
-
     return vector
   }
 
@@ -40,21 +57,30 @@ export default class Model {
    * @param  x     array of x values
    * @param  y     array of y values
    * @param  yName name describing the y-vector data
-   * @param  xName name describing the x-vector data
+   * @param  xName name describing the x-vector data, defaults to "time"
    * @return       array of objects {xName: xValue, yName: yValue}
    */
-  static vectorToDataObject(x: number[], y: number[], yName: string, xName: string = 'time'): Array<object> {
-    if (x.length !== y.length) {
-      throw "input lengths mismatch!"
+  static vectorsToDataObject(vectors: number[][], names: string[]): Array<object> {
+    if (vectors.length !== names.length){
+      throw "vectors and names length mismatch!"
     }
-    let dataObject = []
-    for (let i = 0; i < x.length; i++) {
-      dataObject.push({
-        xName: x[i],
-        yName: y[i]
-      })
+
+    for (let vectorIndex = 0; vectorIndex < vectors.length; vectorIndex++){
+      if (vectors[vectorIndex].length !== vectors[0].length){
+        throw "vectors are not equally long!"
+      }
     }
-    return dataObject
+
+    ////PREPSAT!!!!
+    let objectArray = []
+    for (let pointIndex = 0; pointIndex < vectors[0].length; pointIndex++) {
+      let dataObject = {};
+      for (let vectorIndex = 0; vectorIndex < vectors.length; vectorIndex++){
+        dataObject[names[vectorIndex]] = vectors[vectorIndex][pointIndex]
+      }
+      objectArray.push(dataObject)
+    }
+    return objectArray
   }
 
   /**
