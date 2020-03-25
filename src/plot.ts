@@ -17,6 +17,7 @@ export default class plotMaker{
   protected margin: object;
   protected width: number;
   protected height: number;
+  this.data: Array<object>;
 
   public constructor(data: Array<object>){
     this.margin = {
@@ -25,6 +26,7 @@ export default class plotMaker{
       bottom: 40,
       left: 60
     };
+    this.data = data;
     this.container = select("#plot-container")
     this.width = 500 - this.margin.left - this.margin.right;
     this.height = 200 - this.margin.top - this.margin.bottom;
