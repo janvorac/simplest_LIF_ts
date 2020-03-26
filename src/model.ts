@@ -9,8 +9,7 @@ export default class Model {
   public data: Array<object>;
 
   public constructor(timeStart: number, timeEnd: number) {
-    this.b = 12.6;
-    this.c = 2.44;
+
     this.time = Model.linSpace(timeStart, timeEnd, 200)
 
     this.laserProfVector = Model.calculateVector(this.time, this.laserProfile)
@@ -35,8 +34,8 @@ export default class Model {
    * @param  timeValue time value in nanoseconds
    * @return           intensity value scaled between 0 and 1
    */
-  public laserProfile(timeValue: number): number {
-    return Math.pow(Model.c / Model.b * timeValue, Model.b) * Math.exp(Model.b - timeValue * Model.c)
+  public laserProfile(timeValue: number, b: number = 12.6, c: number = 2.44): number {
+    return Math.pow(c / b * timeValue, b) * Math.exp(b - timeValue * c)
   }
 
   static calculateVector(x: number[], func: Function): number[] {
