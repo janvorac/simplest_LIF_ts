@@ -6,6 +6,14 @@
   stroke: #ff19ff
 }
 
+.laserProfLabel{
+  fill: #ff19ff
+}
+
 .fluo{
-  stroke: #ffb000
+  stroke: #baee02
+}
+
+.fluoLabel{
+  fill: hsl(73, 98%, 37%)
 }
