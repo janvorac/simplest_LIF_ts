@@ -25,12 +25,12 @@ export function conv(vec1, vec2) {
   var disp = 0; // displacement given after each vector multiplication by element of another vector
   var convVec = [];
   // for first multiplication
-  for (j = 0; j < vec2.length; j++) {
+  for (let j = 0; j < vec2.length; j++) {
     convVec.push(vec1[0] * vec2[j]);
   }
   disp = disp + 1;
-  for (i = 1; i < vec1.length; i++) {
-    for (j = 0; j < vec2.length; j++) {
+  for (let i = 1; i < vec1.length; i++) {
+    for (let j = 0; j < vec2.length; j++) {
       if ((disp + j) !== convVec.length) {
         convVec[disp + j] = convVec[disp + j] + (vec1[i] * vec2[j])
       } else {
@@ -39,6 +39,9 @@ export function conv(vec1, vec2) {
     }
     disp = disp + 1;
   }
+  console.log(vec1.length)
+  console.log(vec2.length)
+  console.log(convVec.length)
   return convVec;
 }
 

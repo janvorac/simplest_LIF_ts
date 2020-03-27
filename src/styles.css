@@ -2,6 +2,10 @@
   stroke-width: 2px
 }
 
-.fluoLine{
+.laserProf{
   stroke: #ff19ff
+}
+
+.fluo{
+  stroke: #ffb000
 }

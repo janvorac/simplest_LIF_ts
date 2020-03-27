@@ -1,4 +1,5 @@
 import { conv } from "./conv.js"
+import { max } from "d3"
 
 export default class Model {
   protected b: number;
@@ -14,9 +15,7 @@ export default class Model {
 
     this.laserProfVector = Model.calculateVector(this.time, this.laserProfile)
 
-    //TO BE REPLACED!!
-    this.fluoVector = Model.calculateVector(this.time, this.expDecay)
-    //###########
+    this.fluoVector = this.fluoProf()
 
     this.data = Model.vectorsToDataObject([
       this.time,
@@ -71,7 +70,6 @@ export default class Model {
       }
     }
 
-    ////PREPSAT!!!!
     let objectArray = []
     for (let pointIndex = 0; pointIndex < vectors[0].length; pointIndex++) {
       let dataObject = {};
@@ -89,8 +87,19 @@ export default class Model {
    * @param  tau  lifetime in nanoseconds
    * @return      relative remaining population for given time value
    */
-  protected expDecay(time: number, tau: number): number {
+  protected expDecay(time: number, tau: number = 20): number {
     return Math.exp(-time / tau);
+  }
+
+  protected fluoProf() {
+    const decayVector = Model.calculateVector(this.time, this.expDecay);
+    const laserProfVector = Model.calculateVector(this.time, this.laserProfile);
+    const fluoProfVector = conv(decayVector, laserProfVector)
+    const maxFluoProf = max(fluoProfVector);
+    for (let i = 0; i < fluoProfVector.length; i++){
+      fluoProfVector[i] /= maxFluoProf
+    }
+    return fluoProfVector
   }
 
   static linSpace(start: number, stop: number, numpoints: number): number[] {
