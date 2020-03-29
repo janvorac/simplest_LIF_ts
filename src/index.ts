@@ -1,4 +1,5 @@
 import LinePlot from './line_plot'
+import BarPlot from './bar_plot'
 import Model from './model'
 import {
   xml,
@@ -9,6 +10,8 @@ import {
 const model = new Model(0, 70)
 //console.log(model.data)
 const linePlotMaker = new LinePlot(model.data)
+
+const barPlotMaker = new BarPlot(model.data)
 
 xml("data/LIF.svg")
   .then(data => {
