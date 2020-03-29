@@ -87,14 +87,14 @@ export default class Model {
    * @param  tau  lifetime in nanoseconds
    * @return      relative remaining population for given time value
    */
-  protected expDecay(time: number, tau: number = 20): number {
+  protected expDecay(time: number, tau: number = 35): number {
     return Math.exp(-time / tau);
   }
 
   protected fluoProf() {
     const decayVector = Model.calculateVector(this.time, this.expDecay);
     const laserProfVector = Model.calculateVector(this.time, this.laserProfile);
-    const fluoProfVector = conv(decayVector, laserProfVector)
+    const fluoProfVector = conv(decayVector, laserProfVector).slice(0, decayVector.length)
     const maxFluoProf = max(fluoProfVector);
     for (let i = 0; i < fluoProfVector.length; i++){
       fluoProfVector[i] /= maxFluoProf

@@ -66,6 +66,13 @@ export default class plotMaker{
         .y(d => yScale(laserValue(d)))
       )
 
+    this.plotGroup.append("text")
+      .attr("text-anchor", "start")
+      .classed("laserProfLabel", true)
+      .attr("x", 20)
+      .attr("y", this.height*0.8)
+      .text("Laser pulse")
+
     // Fluorescence line
     this.plotGroup.append("path")
       .classed("chartLine", true)
@@ -76,6 +83,15 @@ export default class plotMaker{
         .x(d => xScale(timeValue(d)))
         .y(d => yScale(fluorescenceValue(d)))
       )
+
+    this.plotGroup.append("text")
+      .attr("text-anchor", "start")
+      .classed("fluoLabel", true)
+      .attr("x", 50)
+      .attr("y", this.height*0.25)
+      .text("Fluorescence")
+
+
 
   }
 
