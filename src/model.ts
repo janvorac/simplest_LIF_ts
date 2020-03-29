@@ -13,9 +13,9 @@ export default class Model {
 
     this.time = Model.linSpace(timeStart, timeEnd, 200)
 
-    this.laserProfVector = Model.calculateVector(this.time, this.laserProfile)
+    this.laserProfVector = Model.calculateVector(this.time, Model.laserProfile)
 
-    this.fluoVector = this.fluoProf()
+    this.fluoVector = this.fluoProfile()
 
     this.data = Model.vectorsToDataObject([
       this.time,
@@ -33,7 +33,7 @@ export default class Model {
    * @param  timeValue time value in nanoseconds
    * @return           intensity value scaled between 0 and 1
    */
-  public laserProfile(timeValue: number, b: number = 12.6, c: number = 2.44): number {
+  static laserProfile(timeValue: number, b: number = 12.6, c: number = 2.44): number {
     return Math.pow(c / b * timeValue, b) * Math.exp(b - timeValue * c)
   }
 
@@ -91,9 +91,9 @@ export default class Model {
     return Math.exp(-time / tau);
   }
 
-  protected fluoProf() {
+  protected fluoProfile() {
     const decayVector = Model.calculateVector(this.time, this.expDecay);
-    const laserProfVector = Model.calculateVector(this.time, this.laserProfile);
+    const laserProfVector = Model.calculateVector(this.time, Model.laserProfile);
     const fluoProfVector = conv(decayVector, laserProfVector).slice(0, decayVector.length)
     const maxFluoProf = max(fluoProfVector);
     for (let i = 0; i < fluoProfVector.length; i++){

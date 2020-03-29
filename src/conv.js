@@ -39,9 +39,6 @@ export function conv(vec1, vec2) {
     }
     disp = disp + 1;
   }
-  console.log(vec1.length)
-  console.log(vec2.length)
-  console.log(convVec.length)
   return convVec;
 }
 
