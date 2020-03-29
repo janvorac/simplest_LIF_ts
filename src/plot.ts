@@ -20,6 +20,7 @@ export default class plotMaker{
   public yScale: any;
   public timeValue: any;
   public fluorescenceValue: any;
+  protected laserValue: any;
   protected margin: object;
   protected width: number;
   protected height: number;
@@ -33,7 +34,7 @@ export default class plotMaker{
       left: 60
     };
     this.data = data;
-    this.container = select("#plot-container")
+    this.container = select("#line-plot-container")
     this.width = 500 - this.margin["left"]- this.margin["right"];
     this.height = 200 - this.margin["top"] - this.margin["bottom"];
 
@@ -42,15 +43,19 @@ export default class plotMaker{
       .classed("plotGroup", true)
 
     this.timeValue = (d: object): number => d["time"];
-    const laserValue = (d: object): number => d["laserProf"];
+    this.laserValue = (d: object): number => d["laserProf"];
     this.fluorescenceValue = (d: object): number => d["fluorescence"];
+    this.drawAxes();
+    this.drawLines();
+  }
 
+  protected function drawAxes(): void{
     this.xScale = scaleLinear()
-      .domain([min(data, this.timeValue), max(data, this.timeValue)])
+      .domain([min(this.data, this.timeValue), max(this.data, this.timeValue)])
       .range([0, this.width]);
 
     this.yScale = scaleLinear()
-      .domain([min(data, laserValue), max(data, laserValue)])
+      .domain([min(this.data, this.laserValue), max(this.data, this.laserValue)])
       .range([this.height, 0]);
 
     const xAxis = this.plotGroup.append("g")
@@ -59,16 +64,18 @@ export default class plotMaker{
 
     const yAxis = this.plotGroup.append("g")
       .call(axisLeft(this.yScale))
+    }
 
+  protected function drawLines(): void{
     // Laser profile line
     this.plotGroup.append("path")
       .classed("chartLine", true)
       .classed("laserProf", true)
-      .datum(data)
+      .datum(this.data)
       .attr("fill", "none")
       .attr("d", line()
         .x(d => this.xScale(this.timeValue(d)))
-        .y(d => this.yScale(laserValue(d)))
+        .y(d => this.yScale(this.laserValue(d)))
       )
 
     this.plotGroup.append("text")
@@ -82,7 +89,7 @@ export default class plotMaker{
     this.plotGroup.append("path")
       .classed("chartLine", true)
       .classed("fluo", true)
-      .datum(data)
+      .datum(this.data)
       .attr("fill", "none")
       .attr("d", line()
         .x(d => this.xScale(this.timeValue(d)))
@@ -107,9 +114,17 @@ export default class plotMaker{
         .x(d => this.xScale(this.timeValue(d)))
         .y(d => this.yScale(this.fluorescenceValue(d)))
       )
-
-
   }
 
+  protected function axLabels(): void{
+    // y-axis label
+    this.plotGroup.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - this.margin["left"])
+      .attr("x",0 - (this.height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("relative # of photons");
 
+  }
 }
