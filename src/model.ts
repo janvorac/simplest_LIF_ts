@@ -40,8 +40,8 @@ export default class Model {
   static calculateVector(x: number[], func: Function): number[] {
     const vector = [];
 
-    for (let i = 0; i < x.length; i++) {
-      let nextVal = func(x[i])
+    for (let xval of x) {
+      let nextVal = func(xval)
       if (nextVal <= 1e-3) {
         nextVal = 0;
       }
