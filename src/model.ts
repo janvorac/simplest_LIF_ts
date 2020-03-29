@@ -87,7 +87,7 @@ export default class Model {
    * @param  tau  lifetime in nanoseconds
    * @return      relative remaining population for given time value
    */
-  protected expDecay(time: number, tau: number = 35): number {
+  protected expDecay(time: number, tau: number = 10): number {
     return Math.exp(-time / tau);
   }
 

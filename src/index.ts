@@ -2,11 +2,12 @@ import plotMaker from './plot'
 import Model from './model'
 import {
   xml,
-  select
+  select,
+  line
 } from 'd3';
 
-const model = new Model(0, 200)
-
+const model = new Model(0, 70)
+//console.log(model.data)
 const pMaker = new plotMaker(model.data)
 
 xml("data/LIF.svg")
@@ -18,7 +19,7 @@ xml("data/LIF.svg")
       .on("input", setTime)
   })
 
-function setTime(): void {
+function setTime(value?: number): void {
   //const laserOpacity = Model.laserProfile(this.value)
   const laserOpacity = model.data[this.value]["laserProf"]
   select("#laser-beam")
@@ -26,4 +27,12 @@ function setTime(): void {
   const fluoOpacity = model.data[this.value]["fluorescence"]
   select("#fluorescence")
     .style("opacity", +fluoOpacity)
+
+  const time = model.data[this.value]["time"]
+  pMaker.plotGroup.select(".timeMarker")
+    .datum([{time:time, fluorescence:0}, {time:time, fluorescence:1}])
+    .attr("d", line()
+      .x(d => pMaker.xScale( pMaker.timeValue(d)))
+      .y(d => pMaker.yScale( pMaker.fluorescenceValue(d)))
+    )
 }

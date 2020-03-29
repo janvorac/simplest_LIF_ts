@@ -13,9 +13,13 @@ export default class plotMaker{
   //protected container: Selection<SVGGElement, null, null, null>;
   //protected plotGroup: Selection<SVGGElement, null, SVGElement, null>;
   protected container: any;
-  protected plotGroup: any;
+  public plotGroup: any;
   protected yAxis: Axis<number>;
   protected xAxis: Axis<number>;
+  public xScale: any;
+  public yScale: any;
+  public timeValue: any;
+  public fluorescenceValue: any;
   protected margin: object;
   protected width: number;
   protected height: number;
@@ -35,25 +39,26 @@ export default class plotMaker{
 
     this.plotGroup = this.container.append("g")
       .attr("transform", `translate(${this.margin["left"]}, ${this.margin["top"]})`)
+      .classed("plotGroup", true)
 
-    const timeValue = (d: object): number => d["time"];
+    this.timeValue = (d: object): number => d["time"];
     const laserValue = (d: object): number => d["laserProf"];
-    const fluorescenceValue = (d: object): number => d["fluorescence"];
+    this.fluorescenceValue = (d: object): number => d["fluorescence"];
 
-    const xScale = scaleLinear()
-      .domain([min(data, timeValue), max(data, timeValue)])
+    this.xScale = scaleLinear()
+      .domain([min(data, this.timeValue), max(data, this.timeValue)])
       .range([0, this.width]);
 
-    const yScale = scaleLinear()
+    this.yScale = scaleLinear()
       .domain([min(data, laserValue), max(data, laserValue)])
       .range([this.height, 0]);
 
     const xAxis = this.plotGroup.append("g")
-      .call(axisBottom(xScale))
+      .call(axisBottom(this.xScale))
       .attr("transform", `translate(0,${this.height})`)
 
     const yAxis = this.plotGroup.append("g")
-      .call(axisLeft(yScale))
+      .call(axisLeft(this.yScale))
 
     // Laser profile line
     this.plotGroup.append("path")
@@ -62,15 +67,15 @@ export default class plotMaker{
       .datum(data)
       .attr("fill", "none")
       .attr("d", line()
-        .x(d => xScale(timeValue(d)))
-        .y(d => yScale(laserValue(d)))
+        .x(d => this.xScale(this.timeValue(d)))
+        .y(d => this.yScale(laserValue(d)))
       )
 
     this.plotGroup.append("text")
       .attr("text-anchor", "start")
       .classed("laserProfLabel", true)
-      .attr("x", 20)
-      .attr("y", this.height*0.8)
+      .attr("x", 55)
+      .attr("y", this.height*0.9)
       .text("Laser pulse")
 
     // Fluorescence line
@@ -80,17 +85,28 @@ export default class plotMaker{
       .datum(data)
       .attr("fill", "none")
       .attr("d", line()
-        .x(d => xScale(timeValue(d)))
-        .y(d => yScale(fluorescenceValue(d)))
+        .x(d => this.xScale(this.timeValue(d)))
+        .y(d => this.yScale(this.fluorescenceValue(d)))
       )
 
     this.plotGroup.append("text")
       .attr("text-anchor", "start")
       .classed("fluoLabel", true)
-      .attr("x", 50)
+      .attr("x", 80)
       .attr("y", this.height*0.25)
       .text("Fluorescence")
 
+    //time marker
+    this.plotGroup.append("path")
+      .classed("timeMarker", true)
+      .classed("chartLine", true)
+      .datum([{time:3.52, fluorescence:0}, {time:3.52, fluorescence:1}])
+      .attr("fill", "none")
+      .attr("stroke", "black")
+      .attr("d", line()
+        .x(d => this.xScale(this.timeValue(d)))
+        .y(d => this.yScale(this.fluorescenceValue(d)))
+      )
 
 
   }

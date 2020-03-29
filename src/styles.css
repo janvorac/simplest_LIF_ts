@@ -17,3 +17,7 @@
 .fluoLabel{
   fill: hsl(73, 98%, 37%)
 }
+
+.timeMarker{
+  stroke: "black"
+}
