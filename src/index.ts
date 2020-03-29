@@ -1,4 +1,4 @@
-import plotMaker from './plot'
+import LinePlot from './line_plot'
 import Model from './model'
 import {
   xml,
@@ -8,7 +8,7 @@ import {
 
 const model = new Model(0, 70)
 //console.log(model.data)
-const pMaker = new plotMaker(model.data)
+const linePlotMaker = new LinePlot(model.data)
 
 xml("data/LIF.svg")
   .then(data => {
@@ -29,10 +29,10 @@ function setTime(value?: number): void {
     .style("opacity", +fluoOpacity)
 
   const time = model.data[this.value]["time"]
-  pMaker.plotGroup.select(".timeMarker")
+  linePlotMaker.plotGroup.select(".timeMarker")
     .datum([{time:time, fluorescence:0}, {time:time, fluorescence:1}])
     .attr("d", line()
-      .x(d => pMaker.xScale( pMaker.timeValue(d)))
-      .y(d => pMaker.yScale( pMaker.fluorescenceValue(d)))
+      .x(d => linePlotMaker.xScale( linePlotMaker.timeValue(d)))
+      .y(d => linePlotMaker.yScale( linePlotMaker.fluorescenceValue(d)))
     )
 }

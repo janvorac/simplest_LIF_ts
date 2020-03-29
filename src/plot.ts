@@ -1,15 +1,12 @@
 import {
   select,
-  max,
-  min,
   scaleLinear,
   axisBottom,
   axisLeft,
-  line,
   Axis
 } from 'd3'
 
-export default class plotMaker{
+export default abstract class plotMaker {
   //protected container: Selection<SVGGElement, null, null, null>;
   //protected plotGroup: Selection<SVGGElement, null, SVGElement, null>;
   protected container: any;
@@ -26,36 +23,39 @@ export default class plotMaker{
   protected height: number;
   public data: Array<object>;
 
-  public constructor(data: Array<object>){
+  public constructor(data: Array<object>, containerID: string,
+    totalWidth: number, totalHeight: number) {
     this.margin = {
       top: 10,
       right: 30,
-      bottom: 40,
+      bottom: 45,
       left: 60
     };
     this.data = data;
-    this.container = select("#line-plot-container")
-    this.width = 500 - this.margin["left"]- this.margin["right"];
-    this.height = 200 - this.margin["top"] - this.margin["bottom"];
+    this.container = select(containerID)
+    this.width = totalWidth - this.margin["left"] - this.margin["right"];
+    this.height = totalHeight - this.margin["top"] - this.margin["bottom"];
 
     this.plotGroup = this.container.append("g")
-      .attr("transform", `translate(${this.margin["left"]}, ${this.margin["top"]})`)
+      .attr(
+        "transform",
+        `translate(${this.margin["left"]}, ${this.margin["top"]})`
+      )
       .classed("plotGroup", true)
-
-    this.timeValue = (d: object): number => d["time"];
-    this.laserValue = (d: object): number => d["laserProf"];
-    this.fluorescenceValue = (d: object): number => d["fluorescence"];
-    this.drawAxes();
-    this.drawLines();
   }
 
-  protected function drawAxes(): void{
+  protected drawAxes(
+    xDomainStart: number,
+    xDomainEnd: number,
+    yDomainStart: number,
+    yDomainEnd: number
+  ): void {
     this.xScale = scaleLinear()
-      .domain([min(this.data, this.timeValue), max(this.data, this.timeValue)])
+      .domain([xDomainStart, xDomainEnd])
       .range([0, this.width]);
 
     this.yScale = scaleLinear()
-      .domain([min(this.data, this.laserValue), max(this.data, this.laserValue)])
+      .domain([yDomainStart, yDomainEnd])
       .range([this.height, 0]);
 
     const xAxis = this.plotGroup.append("g")
@@ -64,67 +64,24 @@ export default class plotMaker{
 
     const yAxis = this.plotGroup.append("g")
       .call(axisLeft(this.yScale))
-    }
-
-  protected function drawLines(): void{
-    // Laser profile line
-    this.plotGroup.append("path")
-      .classed("chartLine", true)
-      .classed("laserProf", true)
-      .datum(this.data)
-      .attr("fill", "none")
-      .attr("d", line()
-        .x(d => this.xScale(this.timeValue(d)))
-        .y(d => this.yScale(this.laserValue(d)))
-      )
-
-    this.plotGroup.append("text")
-      .attr("text-anchor", "start")
-      .classed("laserProfLabel", true)
-      .attr("x", 55)
-      .attr("y", this.height*0.9)
-      .text("Laser pulse")
-
-    // Fluorescence line
-    this.plotGroup.append("path")
-      .classed("chartLine", true)
-      .classed("fluo", true)
-      .datum(this.data)
-      .attr("fill", "none")
-      .attr("d", line()
-        .x(d => this.xScale(this.timeValue(d)))
-        .y(d => this.yScale(this.fluorescenceValue(d)))
-      )
-
-    this.plotGroup.append("text")
-      .attr("text-anchor", "start")
-      .classed("fluoLabel", true)
-      .attr("x", 80)
-      .attr("y", this.height*0.25)
-      .text("Fluorescence")
-
-    //time marker
-    this.plotGroup.append("path")
-      .classed("timeMarker", true)
-      .classed("chartLine", true)
-      .datum([{time:3.52, fluorescence:0}, {time:3.52, fluorescence:1}])
-      .attr("fill", "none")
-      .attr("stroke", "black")
-      .attr("d", line()
-        .x(d => this.xScale(this.timeValue(d)))
-        .y(d => this.yScale(this.fluorescenceValue(d)))
-      )
   }
 
-  protected function axLabels(): void{
+  protected axLabels(xLabel: string, yLabel: string): void {
     // y-axis label
     this.plotGroup.append("text")
       .attr("transform", "rotate(-90)")
       .attr("y", 0 - this.margin["left"])
-      .attr("x",0 - (this.height / 2))
-      .attr("dy", "1em")
+      .attr("x", 0 - (this.height / 2))
+      .attr("dy", "0.8em")
       .style("text-anchor", "middle")
-      .text("relative # of photons");
+      .text(yLabel);
 
+    // x-axis label
+    this.plotGroup.append("text")
+      .attr("transform",
+        "translate(" + (this.width / 2) + " ," +
+        (this.height + this.margin["top"] + 30) + ")")
+      .style("text-anchor", "middle")
+      .text(xLabel);
   }
 }
