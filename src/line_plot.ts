@@ -1,6 +1,7 @@
 import {
   max,
   min,
+  scaleLinear,
   line
 } from 'd3'
 import PlotMaker from './plot'
@@ -11,12 +12,28 @@ export default class LinePlot extends PlotMaker{
     this.timeValue = (d: object): number => d["time"];
     this.laserValue = (d: object): number => d["laserProf"];
     this.fluorescenceValue = (d: object): number => d["fluorescence"];
-    this.drawAxes(
+    this.createScales(
       min(this.data, this.timeValue), max(this.data, this.timeValue),
       min(this.data, this.laserValue), max(this.data, this.laserValue)
     );
+    this.drawAxes();
     this.drawLines();
     this.axLabels("time [ns]", "relative # of photons");
+  }
+
+  protected createScales(
+    xDomainStart: number,
+    xDomainEnd: number,
+    yDomainStart: number,
+    yDomainEnd: number
+  ): void{
+    this.xScale = scaleLinear()
+      .domain([xDomainStart, xDomainEnd])
+      .range([0, this.width]);
+
+    this.yScale = scaleLinear()
+      .domain([yDomainStart, yDomainEnd])
+      .range([this.height, 0]);
   }
 
   protected drawLines(): void {

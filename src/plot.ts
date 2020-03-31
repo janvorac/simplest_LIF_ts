@@ -1,6 +1,5 @@
 import {
   select,
-  scaleLinear,
   axisBottom,
   axisLeft,
   Axis
@@ -44,25 +43,14 @@ export default abstract class plotMaker {
       .classed("plotGroup", true)
   }
 
-  protected drawAxes(
-    xDomainStart: number,
-    xDomainEnd: number,
-    yDomainStart: number,
-    yDomainEnd: number
-  ): void {
-    this.xScale = scaleLinear()
-      .domain([xDomainStart, xDomainEnd])
-      .range([0, this.width]);
 
-    this.yScale = scaleLinear()
-      .domain([yDomainStart, yDomainEnd])
-      .range([this.height, 0]);
 
-    const xAxis = this.plotGroup.append("g")
+  protected drawAxes(): void {
+    this.xAxis = this.plotGroup.append("g")
       .call(axisBottom(this.xScale))
       .attr("transform", `translate(0,${this.height})`)
 
-    const yAxis = this.plotGroup.append("g")
+    this.yAxis = this.plotGroup.append("g")
       .call(axisLeft(this.yScale))
   }
 
