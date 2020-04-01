@@ -1,6 +1,9 @@
 .cache/*
-dist/*
+dist/
 src/.cache
 node_modules/
-src/dist
+src/dist/*js
+src/dist/*html
+src/dist/*map
+src/dist/*css
 src/server.js
