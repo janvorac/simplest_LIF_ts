@@ -4,10 +4,10 @@ import {
   scaleLinear,
   line
 } from 'd3'
-import PlotMaker from './plot'
+import PlotMaker from './plot_abstract'
 
-export default class LinePlot extends PlotMaker{
-  public constructor(data: Array<object>){
+export default class LinePlot extends PlotMaker {
+  public constructor(data: Array<object>) {
     super(data, "#line-plot-container", 500, 200)
     this.timeValue = (d: object): number => d["time"];
     this.laserValue = (d: object): number => d["laserProf"];
@@ -26,7 +26,7 @@ export default class LinePlot extends PlotMaker{
     xDomainEnd: number,
     yDomainStart: number,
     yDomainEnd: number
-  ): void{
+  ): void {
     this.xScale = scaleLinear()
       .domain([xDomainStart, xDomainEnd])
       .range([0, this.width]);
@@ -73,11 +73,15 @@ export default class LinePlot extends PlotMaker{
       .attr("y", this.height * 0.25)
       .text("Fluorescence")
 
+
+  }
+
+  public addTimeMarker(time: number = 3.52) {
     //time marker
     this.plotGroup.append("path")
       .classed("timeMarker", true)
       .classed("chartLine", true)
-      .datum([{ time: 3.52, fluorescence: 0 }, { time: 3.52, fluorescence: 1 }])
+      .datum([{ time: 3.52, fluorescence: 0 }, { time: time, fluorescence: 1 }])
       .attr("fill", "none")
       .attr("stroke", "black")
       .attr("d", line()
