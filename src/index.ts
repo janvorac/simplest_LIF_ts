@@ -30,8 +30,14 @@ function setTime(value?: number): void {
   const laserOpacity = model.data[this.value]["laserProf"]
   select("#laser-beam")
     .style("opacity", +laserOpacity)
+  select("#laser-circle")
+    .style("opacity", +laserOpacity)
   const fluoOpacity = model.data[this.value]["fluorescence"]
   select("#fluorescence")
+    .style("opacity", +fluoOpacity)
+  select("#fluo-circle")
+    .style("opacity", +fluoOpacity)
+  select("#fluo-triangle")
     .style("opacity", +fluoOpacity)
 
   const time = model.data[this.value]["time"]

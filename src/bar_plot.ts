@@ -10,7 +10,7 @@ export default class BarPlot extends PlotMaker {
   public data: object[];
 
   public constructor(data: Array<object> = data_default) {
-    super(data, "#bar-plot-container", 500, 100) //tune the totalHeight
+    super(data, "#bar-plot-container", 480, 100) //tune the totalHeight
     this.createScales()
     this.drawBars();
     this.drawAxes();

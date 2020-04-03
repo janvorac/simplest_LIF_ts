@@ -8,7 +8,7 @@ import PlotMaker from './plot_abstract'
 
 export default class LinePlot extends PlotMaker {
   public constructor(data: Array<object>) {
-    super(data, "#line-plot-container", 500, 200)
+    super(data, "#line-plot-container", 480, 200)
     this.timeValue = (d: object): number => d["time"];
     this.laserValue = (d: object): number => d["laserProf"];
     this.fluorescenceValue = (d: object): number => d["fluorescence"];
