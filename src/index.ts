@@ -16,7 +16,7 @@ linePlotMaker.addTimeMarker(model.data[defaultTimeIndex]["time"])
 const barPlotMaker = new BarPlot()
 barPlotMaker.updateData(model.data[defaultTimeIndex]["fluorescence"])
 
-xml("data/LIF.svg")
+xml("data/LIF_mrk.svg")
   .then(data => {
     select("div#svg-container").node().append(data.documentElement)
     select("#laser-beam")
@@ -25,7 +25,7 @@ xml("data/LIF.svg")
       .on("input", setTime)
   })
 
-function setTime(value?: number): void {
+function setTime(): void {
   //const laserOpacity = Model.laserProfile(this.value)
   const laserOpacity = model.data[this.value]["laserProf"]
   select("#laser-beam")
@@ -35,11 +35,14 @@ function setTime(value?: number): void {
   const fluoOpacity = model.data[this.value]["fluorescence"]
   select("#fluorescence")
     .style("opacity", +fluoOpacity)
-  select("#fluo-circle")
+  select("#fluo-circle-2")
     .style("opacity", +fluoOpacity)
-  select("#fluo-triangle")
+  select("#fluo-circle-5")
+    .style("opacity", +fluoOpacity)
+  select("#fluo-triangle-9")
     .style("opacity", +fluoOpacity)
 
+  console.log(select("#fluo-circle-2").style("opacity"))
   const time = model.data[this.value]["time"]
   linePlotMaker.plotGroup.select(".timeMarker")
     .datum([{ time: time, fluorescence: 0 }, { time: time, fluorescence: 1 }])
