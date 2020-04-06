@@ -42,6 +42,7 @@ body{
 }
 
 hr {
-  border: 1px solid;
+  border: none;
+  border-top: 1.2px solid;
   margin-left: 0.4cm;
 }
